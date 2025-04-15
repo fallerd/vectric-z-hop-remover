@@ -19,8 +19,13 @@ function getHeights(lines) {
             break;
         }
     }
-    const safeHeightLine = lines[firstLineNumber].trim();
-    const safeHeightMatch = safeHeightLine.match(/G0.*Z([\-0-9.]+)/);
+    let safeHeightLine = lines[firstLineNumber].trim();
+    let safeHeightMatch = safeHeightLine.match(/G0.*Z([\-0-9.]+)/);
+    if (!safeHeightMatch) { // Quick fix for after upgrading to aspire v12... seems to split up these position initialization lines probably to first move XY then Z for safety
+        firstLineNumber++
+        safeHeightLine = lines[firstLineNumber].trim();
+        safeHeightMatch = safeHeightLine.match(/G0.*Z([\-0-9.]+)/);
+    }
     const safeHeight = parseFloat(safeHeightMatch[1]);
     console.log(`   Safe height identified as ${safeHeight}mm or ${safeHeight/25.4}in` )
 
